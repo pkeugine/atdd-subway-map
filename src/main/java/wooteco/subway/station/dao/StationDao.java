@@ -1,17 +1,18 @@
 package wooteco.subway.station.dao;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import wooteco.subway.station.exception.StationDuplicateException;
 import wooteco.subway.station.domain.Station;
+import wooteco.subway.station.exception.StationDuplicateException;
 
 @Repository
 public class StationDao {
@@ -34,7 +35,9 @@ public class StationDao {
     public Station insert(Station station) {
         SqlParameterSource params = new BeanPropertySqlParameterSource(station);
         try {
-            Long id = insertAction.executeAndReturnKey(params).longValue();
+            Long id = insertAction
+                    .executeAndReturnKey(params)
+                    .longValue();
             return new Station(id, station.getName());
         } catch (DuplicateKeyException e) {
             throw new StationDuplicateException(station.getName());
@@ -42,9 +45,13 @@ public class StationDao {
     }
 
     public List<Station> findAll() {
-        return Arrays.asList(
-                new Station("피케이역"),
-                new Station("우테코역")
-        );
+        String sql = "SELECT * FROM STATION";
+        return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public Optional<Station> findByid(Long stationId) {
+        String sql = "SELECT * FROM STATION WHERE id = ?";
+        List<Station> result = jdbcTemplate.query(sql, rowMapper, stationId);
+        return Optional.ofNullable(DataAccessUtils.singleResult(result));
     }
 }

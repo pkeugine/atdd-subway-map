@@ -1,5 +1,10 @@
 package wooteco.subway.station.domain;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Getter
+@EqualsAndHashCode(exclude = "name")
 public class Station {
 
     private Long id;
@@ -15,14 +20,6 @@ public class Station {
 
     public Station(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
     }
 }
 
