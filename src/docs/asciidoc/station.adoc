@@ -1,0 +1,9 @@
+== 지하철 역 API
+
+=== 역 생성 성공
+==== 요청
+include::{snippets}/station-post/http-request.adoc[]
+include::{snippets}/station-post/request-fields.adoc[]
+==== 응답
+include::{snippets}/station-post/http-response.adoc[]
+include::{snippets}/station-post/response-fields.adoc[]

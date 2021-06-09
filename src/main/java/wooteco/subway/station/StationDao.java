@@ -1,31 +1,20 @@
 package wooteco.subway.station;
 
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class StationDao {
 
-    private static Long seq = 0L;
-    private static List<Station> stations = new ArrayList<>();
-
-    public static Station save(Station station) {
-        Station persistStation = createNewObject(station);
-        stations.add(persistStation);
-        return persistStation;
+    public Station save(Station station) {
+        return new Station("피케이역");
     }
 
     public static List<Station> findAll() {
-        return stations;
-    }
-
-    private static Station createNewObject(Station station) {
-        Field field = ReflectionUtils.findField(Station.class, "id");
-        field.setAccessible(true);
-        ReflectionUtils.setField(field, station, ++seq);
-        return station;
+        return Arrays.asList(
+                new Station("피케이역"),
+                new Station("우테코역")
+        );
     }
 }
