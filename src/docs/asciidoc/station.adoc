@@ -2,8 +2,16 @@
 
 === 역 생성 성공
 ==== 요청
-include::{snippets}/station-post/http-request.adoc[]
-include::{snippets}/station-post/request-fields.adoc[]
+include::{snippets}/station-post-success/http-request.adoc[]
+include::{snippets}/station-post-success/request-fields.adoc[]
 ==== 응답
-include::{snippets}/station-post/http-response.adoc[]
-include::{snippets}/station-post/response-fields.adoc[]
+include::{snippets}/station-post-success/http-response.adoc[]
+include::{snippets}/station-post-success/response-fields.adoc[]
+
+=== 역 생성 실패 - 이미 존재하는 역
+==== 요청
+include::{snippets}/station-post-fail-duplicate-name/http-request.adoc[]
+include::{snippets}/station-post-fail-duplicate-name/request-fields.adoc[]
+==== 응답
+include::{snippets}/station-post-fail-duplicate-name/http-response.adoc[]
+include::{snippets}/station-post-fail-duplicate-name/response-fields.adoc[]
