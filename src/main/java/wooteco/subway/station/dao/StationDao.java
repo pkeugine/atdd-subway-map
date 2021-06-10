@@ -49,9 +49,14 @@ public class StationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Optional<Station> findByid(Long stationId) {
+    public Optional<Station> findById(Long stationId) {
         String sql = "SELECT * FROM STATION WHERE id = ?";
         List<Station> result = jdbcTemplate.query(sql, rowMapper, stationId);
         return Optional.ofNullable(DataAccessUtils.singleResult(result));
+    }
+
+    public void deleteById(Long stationId) {
+        String sql = "DELETE FROM STATION WHERE id = ?";
+        this.jdbcTemplate.update(sql, stationId);
     }
 }

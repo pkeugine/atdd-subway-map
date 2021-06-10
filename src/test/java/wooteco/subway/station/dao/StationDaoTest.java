@@ -1,6 +1,7 @@
 package wooteco.subway.station.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
@@ -88,10 +89,47 @@ class StationDaoTest {
         Long 찾아볼역Id = 저장된_찾아볼역.getId();
 
         // when
-        Optional<Station> 찾은역 = stationDao.findByid(찾아볼역Id);
+        Optional<Station> 찾은역 = stationDao.findById(찾아볼역Id);
 
         // then
         assertThat(찾은역.isPresent()).isTrue();
         assertThat(찾은역.get()).isEqualTo(저장된_찾아볼역);
     }
+
+    @DisplayName("id로 지하철 역 조회 - 실패, id 존재하지 않음")
+    @Test
+    void findById_fail_noId() {
+        // given
+        Long 찾아볼역Id = 1L;
+
+        // when
+        Optional<Station> 찾은역 = stationDao.findById(찾아볼역Id);
+
+        // then
+        assertThat(찾은역.isPresent()).isFalse();
+    }
+
+    @DisplayName("id로 지하철 역 삭제 - 성공")
+    @Test
+    void delete_success() {
+        // given
+        Station 삭제할역 = new Station("삭제할역");
+        Station 저장된_삭제할역 = stationDao.insert(삭제할역);
+        Long 삭제할역Id = 저장된_삭제할역.getId();
+
+        // when // then
+        assertThatCode(() -> stationDao.deleteById(삭제할역Id)).doesNotThrowAnyException();
+    }
+
+//    @DisplayName("id로 지하철 역 삭제 - 실패, 역 존재하지 않음")
+//    @Test
+//    void delete_success() {
+//        // given
+//        Station 삭제할역 = new Station("삭제할역");
+//        Station 저장된_삭제할역 = stationDao.insert(삭제할역);
+//        Long 삭제할역Id = 저장된_삭제할역.getId();
+//
+//        // when // then
+//        assertThatCode(() -> stationDao.deleteById(삭제할역Id)).doesNotThrowAnyException();
+//    }
 }
