@@ -64,8 +64,8 @@ class StationDocumentationTest {
     @Test
     void createStation_success() throws Exception {
         // given
-        final StationRequest 피케이역_요청 = new StationRequest("피케이역_");
-        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역_");
+        final StationRequest 피케이역_요청 = new StationRequest("피케이역");
+        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역");
 
         given(stationService.createStation(any(StationRequest.class))).willReturn(피케이역_응답);
 
@@ -96,8 +96,8 @@ class StationDocumentationTest {
     @Test
     void createStation_fail_duplicateName() throws Exception {
         // given
-        final StationRequest 피케이역_요청 = new StationRequest("피케이역_");
-        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역_");
+        final StationRequest 피케이역_요청 = new StationRequest("피케이역");
+        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역");
 
         given(stationService.createStation(any(StationRequest.class)))
                 .willThrow(new StationDuplicateException(피케이역_응답.getName()));

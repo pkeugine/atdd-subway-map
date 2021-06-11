@@ -24,8 +24,8 @@
 - [ ] 역 수정
   
 ## 노선
-- [ ] 노선 관련 dummy data 구현
-- [ ] 해당 dummy data api 문서화
+- [x] 노선 관련 dummy data 구현
+- [x] 해당 dummy data api 문서화
   
 - [ ] 노선 생성
     - [ ] 중복되는 이름 / 색의 노선 생성 검증
