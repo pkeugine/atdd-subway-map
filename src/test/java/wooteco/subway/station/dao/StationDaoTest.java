@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.subway.station.domain.Station;
@@ -60,8 +61,7 @@ class StationDaoTest {
 
         // when // then
         assertThatThrownBy(() -> stationDao.insert(코지역))
-                .isInstanceOf(StationDuplicateException.class)
-                .hasMessageContaining("코지역");
+                .isInstanceOf(DuplicateKeyException.class);
     }
 
     @DisplayName("전체 지하철 역 조회 - 성공")
