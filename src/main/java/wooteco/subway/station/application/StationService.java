@@ -35,7 +35,7 @@ public class StationService {
     public List<StationResponse> showStations() {
         List<Station> stations = stationDao.findAll();
         return stations.stream()
-                .map(it -> new StationResponse(it.getId(), it.getName()))
+                .map(StationResponse::of)
                 .collect(Collectors.toList());
     }
 
