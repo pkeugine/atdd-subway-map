@@ -43,8 +43,7 @@ class StationServiceTest {
         StationResponse 피케이역_응답 = stationService.createStation(피케이역_요청);
 
         // then
-        assertThat(피케이역_응답).extracting("id").isEqualTo(피케이역.getId());
-        assertThat(피케이역_응답).extracting("name").isEqualTo(피케이역.getName());
+        then(stationDao).should(times(1)).insert(any(Station.class));
     }
 
     @DisplayName("지하철 역 생성 - 실패, 중복되는 이름 존재")
