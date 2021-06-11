@@ -2,14 +2,10 @@ package wooteco.subway.station.ui;
 
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wooteco.subway.station.application.StationService;
-import wooteco.subway.station.dao.StationDao;
-import wooteco.subway.station.dto.ErrorResponse;
 import wooteco.subway.station.dto.StationRequest;
 import wooteco.subway.station.dto.StationResponse;
-import wooteco.subway.station.exception.StationDuplicateException;
 
 @Slf4j
 @RestController
@@ -57,14 +50,5 @@ public class StationController {
         return ResponseEntity
                 .noContent()
                 .build();
-    }
-
-    @ExceptionHandler(StationDuplicateException.class)
-    public ResponseEntity<ErrorResponse> handleStationInvalidNameException(StationDuplicateException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
     }
 }
