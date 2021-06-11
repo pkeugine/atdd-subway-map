@@ -8,12 +8,14 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static wooteco.subway.documentation.ApiDocumentUtils.getDocumentRequest;
 import static wooteco.subway.documentation.ApiDocumentUtils.getDocumentResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +26,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import wooteco.subway.station.application.StationService;
 import wooteco.subway.station.domain.Station;
+import wooteco.subway.station.dto.StationResponse;
 import wooteco.subway.station.ui.StationController;
 import wooteco.subway.station.dao.StationDao;
 import wooteco.subway.station.exception.StationDuplicateException;
@@ -47,7 +52,7 @@ class StationDocumentationTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private StationDao stationDao;
+    private StationService stationService;
 
     @BeforeEach
     public void setUp(WebApplicationContext webApplicationContext,
@@ -61,16 +66,15 @@ class StationDocumentationTest {
     @Test
     void createStation_success() throws Exception {
         // given
-        final Station 피케이역 = new Station(1L, "피케이역");
+        final StationRequest 피케이역_요청 = new StationRequest("피케이역_");
+        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역_");
 
-        given(stationDao.insert(any(Station.class))).willReturn(피케이역);
+        given(stationService.createStation(any(StationRequest.class))).willReturn(피케이역_응답);
 
         // when
-        final StationRequest stationRequest = new StationRequest("피케이역");
-
         final ResultActions result = this.mockMvc.perform(
                 post("/stations")
-                        .content(objectMapper.writeValueAsString(stationRequest))
+                        .content(objectMapper.writeValueAsString(피케이역_요청))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
         );
@@ -90,20 +94,20 @@ class StationDocumentationTest {
                 ));
     }
 
-    @DisplayName("지하철 역 생성 실패 - 중복되는 역 존재")
+    @DisplayName("지하철 역 생성 - 실패, 중복되는 역 존재")
     @Test
     void createStation_fail_duplicateName() throws Exception {
         // given
-        final Station 피케이역 = new Station(1L, "피케이역");
+        final StationRequest 피케이역_요청 = new StationRequest("피케이역_");
+        final StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역_");
 
-        given(stationDao.insert(any(Station.class))).willThrow(new StationDuplicateException(피케이역.getName()));
+        given(stationService.createStation(any(StationRequest.class)))
+                .willThrow(new StationDuplicateException(피케이역_응답.getName()));
 
         // when
-        final StationRequest stationRequest = new StationRequest("피케이역");
-
         final ResultActions result = this.mockMvc.perform(
                 post("/stations")
-                        .content(objectMapper.writeValueAsString(stationRequest))
+                        .content(objectMapper.writeValueAsString(피케이역_요청))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
         );
@@ -122,4 +126,31 @@ class StationDocumentationTest {
                 ));
     }
 
+
+    @DisplayName("지하철 역 전체 조회")
+    @Test
+    void showStations_success() throws Exception {
+        // given
+        given(stationService.showStations()).willReturn(Arrays.asList(
+                new StationResponse(1L, "피케이역"),
+                new StationResponse(2L, "코지역")
+        ));
+
+        // when
+        ResultActions result = this.mockMvc.perform(
+                get("/stations")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // then
+        FieldDescriptor[] station = new FieldDescriptor[] {
+                fieldWithPath("id").type(JsonFieldType.NUMBER).description("역 id"),
+                fieldWithPath("name").type(JsonFieldType.STRING).description("역 이름") };
+        result.andExpect(status().isOk())
+                .andDo(document("station-get-success",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(station)
+                ));
+    }
 }
