@@ -15,3 +15,15 @@ include::{snippets}/station-post-fail-duplicate-name/request-fields.adoc[]
 ==== 응답
 include::{snippets}/station-post-fail-duplicate-name/http-response.adoc[]
 include::{snippets}/station-post-fail-duplicate-name/response-fields.adoc[]
+
+=== 전체 역 조회
+==== 요청
+include::{snippets}/station-get-success/http-request.adoc[]
+==== 응답
+include::{snippets}/station-get-success/http-response.adoc[]
+
+=== 역 삭제 성공
+==== 요청
+include::{snippets}/station-delete-success/http-request.adoc[]
+==== 응답
+include::{snippets}/station-delete-success/http-response.adoc[]

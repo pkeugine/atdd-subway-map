@@ -7,7 +7,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,12 +34,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.subway.station.application.StationService;
-import wooteco.subway.station.domain.Station;
-import wooteco.subway.station.dto.StationResponse;
-import wooteco.subway.station.ui.StationController;
-import wooteco.subway.station.dao.StationDao;
-import wooteco.subway.station.exception.StationDuplicateException;
 import wooteco.subway.station.dto.StationRequest;
+import wooteco.subway.station.dto.StationResponse;
+import wooteco.subway.station.exception.StationDuplicateException;
+import wooteco.subway.station.ui.StationController;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @WebMvcTest(StationController.class)
@@ -121,7 +119,8 @@ class StationDocumentationTest {
                                 fieldWithPath("name").type(JsonFieldType.STRING).description("역 이름")
                         ),
                         responseFields(
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("에러 메시지")
+                                fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("에러 메시지")
                         )
                 ));
     }
@@ -143,14 +142,33 @@ class StationDocumentationTest {
         );
 
         // then
-        FieldDescriptor[] station = new FieldDescriptor[] {
+        FieldDescriptor[] station = new FieldDescriptor[]{
                 fieldWithPath("id").type(JsonFieldType.NUMBER).description("역 id"),
-                fieldWithPath("name").type(JsonFieldType.STRING).description("역 이름") };
+                fieldWithPath("name").type(JsonFieldType.STRING).description("역 이름")};
         result.andExpect(status().isOk())
                 .andDo(document("station-get-success",
                         getDocumentRequest(),
                         getDocumentResponse(),
-                        responseFields(station)
+                        responseFields(
+                                fieldWithPath("[]").description("저장된 모든 역"))
+                                .andWithPrefix("[].", station)
                 ));
     }
+
+    @DisplayName("지하철 역 삭제 - 성공")
+    @Test
+    void deleteStation_success() throws Exception {
+        // given // when
+        final ResultActions result = this.mockMvc.perform(
+                delete("/stations/1")
+        );
+
+        // then
+        result.andExpect(status().isNoContent())
+                .andDo(document("station-delete-success",
+                        getDocumentRequest(),
+                        getDocumentResponse()
+                ));
+    }
+
 }
