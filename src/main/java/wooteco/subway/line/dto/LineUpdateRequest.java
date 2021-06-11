@@ -1,5 +1,7 @@
 package wooteco.subway.line.dto;
 
+import wooteco.subway.line.domain.Line;
+
 public class LineUpdateRequest {
 
     private String name;
@@ -22,5 +24,9 @@ public class LineUpdateRequest {
 
     public String getColor() {
         return color;
+    }
+
+    public Line toLindWithId(Long id) {
+        return new Line(id, this.name, this.color);
     }
 }

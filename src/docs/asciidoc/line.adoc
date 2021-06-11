@@ -6,6 +6,18 @@ include::{snippets}/line-post-success/http-request.adoc[]
 ==== 응답
 include::{snippets}/line-post-success/http-response.adoc[]
 
+=== 노선 생성 실패 - 중복되는 이름 존재
+==== 요청
+include::{snippets}/line-post-fail-duplicate-name/http-request.adoc[]
+include::{snippets}/line-post-fail-duplicate-name/http-response.adoc[]
+
+=== 노선 생성 실패 - 중복되는 색상 존재
+==== 요청
+include::{snippets}/line-post-fail-duplicate-color/http-request.adoc[]
+==== 응답
+include::{snippets}/line-post-fail-duplicate-color/http-response.adoc[]
+
+
 === 노선 전체 조회 성공
 ==== 요청
 include::{snippets}/line-getAll-success/http-request.adoc[]
@@ -23,6 +35,12 @@ include::{snippets}/line-get-success/http-response.adoc[]
 include::{snippets}/line-put-success/http-request.adoc[]
 ==== 응답
 include::{snippets}/line-put-success/http-response.adoc[]
+
+=== 노선 수정 실패 - 중복되는 이름 또는 색상 존재
+==== 요청
+include::{snippets}/line-put-fail-duplicate-name-or-color/http-request.adoc[]
+==== 응답
+include::{snippets}/line-put-fail-duplicate-name-or-color/http-response.adoc[]
 
 === 노선 삭제 성공
 ==== 요청

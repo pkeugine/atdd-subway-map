@@ -71,7 +71,7 @@ class StationServiceTest {
         given(stationDao.findAll()).willReturn(stations);
 
         // when
-        List<StationResponse> 전체_역_응답 = stationService.showStations();
+        List<StationResponse> 전체_역_응답 = stationService.findAllStationResponses();
 
         // then
         then(stationDao).should(times(1)).findAll();

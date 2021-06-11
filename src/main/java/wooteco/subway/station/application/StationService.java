@@ -32,11 +32,14 @@ public class StationService {
         }
     }
 
-    public List<StationResponse> showStations() {
-        List<Station> stations = stationDao.findAll();
-        return stations.stream()
+    public List<StationResponse> findAllStationResponses() {
+        return findAllStations().stream()
                 .map(StationResponse::of)
                 .collect(Collectors.toList());
+    }
+
+    private List<Station> findAllStations() {
+        return stationDao.findAll();
     }
 
     @Transactional

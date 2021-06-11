@@ -8,7 +8,7 @@ include::{snippets}/station-post-success/request-fields.adoc[]
 include::{snippets}/station-post-success/http-response.adoc[]
 include::{snippets}/station-post-success/response-fields.adoc[]
 
-=== 역 생성 실패 - 이미 존재하는 역
+=== 역 생성 실패 - 중복되는 이름 존재
 ==== 요청
 include::{snippets}/station-post-fail-duplicate-name/http-request.adoc[]
 include::{snippets}/station-post-fail-duplicate-name/request-fields.adoc[]

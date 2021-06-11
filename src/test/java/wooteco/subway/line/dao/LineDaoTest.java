@@ -140,6 +140,38 @@ class LineDaoTest {
         assertThat(수정된_노선).contains(이름_색상_수정될_신분당선);
     }
 
+    @DisplayName("노선 수정 - 실패, 중복되는 이름 존재")
+    @Test
+    void update_fail_duplicateName() {
+        // given
+        Line 신분당선 = new Line("신분당선", "bg-red-600");
+        Line 저장된_신분당선 = lineDao.insert(신분당선);
+        Line 구분당선 = new Line("구분당선", "bg-blue-600");
+        lineDao.insert(구분당선);
+
+        Line 이름_수정될_신분당선 = new Line(저장된_신분당선.getId(), "구분당선", "bg-red-600");
+
+        //when // then
+        assertThatThrownBy(() -> lineDao.update(이름_수정될_신분당선))
+                .isInstanceOf(DuplicateKeyException.class);
+    }
+
+    @DisplayName("노선 수정 - 실패, 중복되는 색상 존재")
+    @Test
+    void update_fail_duplicateColor() {
+        // given
+        Line 신분당선_빨강 = new Line("신분당선", "bg-red-600");
+        Line 저장된_신분당선_빨강 = lineDao.insert(신분당선_빨강);
+        Line 구분당선_파랑 = new Line("구분당선", "bg-blue-600");
+        lineDao.insert(구분당선_파랑);
+
+        Line 색상_수정될_신분당선 = new Line(저장된_신분당선_빨강.getId(), "신분당선", "bg-blue-600");
+
+        //when // then
+        assertThatThrownBy(() -> lineDao.update(색상_수정될_신분당선))
+                .isInstanceOf(DuplicateKeyException.class);
+    }
+
     @DisplayName("id로 노선 삭제 - 성공")
     @Test
     void deleteById_success() {

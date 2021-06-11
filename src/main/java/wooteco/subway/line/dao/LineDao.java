@@ -56,8 +56,24 @@ public class LineDao {
                 line.getId());
     }
 
-    public void delete(Long lineId) {
+    public void delete(Long id) {
         String sql = "DELETE FROM LINE WHERE id = ?";
-        jdbcTemplate.update(sql, lineId);
+        jdbcTemplate.update(sql, id);
+    }
+
+    public boolean existsName(String name) {
+        String sql = "SELECT EXISTS (SELECT * FROM LINE WHERE name = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, name);
+    }
+
+    public boolean existsName2(String name) {
+        String sql = "SELECT COUNT(*) FROM LINE WHERE name = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, name);
+        return count > 0;
+    }
+
+    public boolean existsColor(String color) {
+        String sql = "SELECT EXISTS (SELECT * FROM LINE WHERE color = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, color);
     }
 }

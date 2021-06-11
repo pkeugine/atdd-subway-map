@@ -3,7 +3,6 @@ package wooteco.subway.station.ui;
 import java.net.URI;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +37,7 @@ public class StationController {
 
     @GetMapping
     public ResponseEntity<List<StationResponse>> showStations() {
-        List<StationResponse> stationResponses = stationService.showStations();
+        List<StationResponse> stationResponses = stationService.findAllStationResponses();
         return ResponseEntity
                 .ok()
                 .body(stationResponses);
