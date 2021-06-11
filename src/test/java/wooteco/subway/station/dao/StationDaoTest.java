@@ -16,7 +16,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.subway.station.domain.Station;
-import wooteco.subway.station.exception.StationDuplicateException;
 
 @JdbcTest
 @Sql("classpath:tableInit.sql")
@@ -35,7 +34,7 @@ class StationDaoTest {
 
     @BeforeEach
     void setUp() {
-        stationDao = new StationDao(jdbcTemplate, dataSource);
+        this.stationDao = new StationDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("지하철 역 저장 - 성공")
@@ -110,7 +109,7 @@ class StationDaoTest {
 
     @DisplayName("id로 지하철 역 삭제 - 성공")
     @Test
-    void delete_success() {
+    void deleteById_success() {
         // given
         Station 삭제할역 = new Station("삭제할역");
         Station 저장된_삭제할역 = stationDao.insert(삭제할역);
@@ -118,5 +117,6 @@ class StationDaoTest {
 
         // when // then
         assertThatCode(() -> stationDao.deleteById(삭제할역Id)).doesNotThrowAnyException();
+        assertThat(stationDao.findAll()).isEmpty();
     }
 }
