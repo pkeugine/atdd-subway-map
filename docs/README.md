@@ -49,7 +49,7 @@
 - [ ] 노선 통합 테스트 작성
  
 ## 구간
-- [ ] section schema 작성
+- [x] section schema 작성
   
 - [ ] 노선 등록시 초기 종점역 두 곳 등록
   
