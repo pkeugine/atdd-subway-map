@@ -9,7 +9,8 @@ import wooteco.subway.station.dao.StationDao;
 import wooteco.subway.station.domain.Station;
 import wooteco.subway.station.dto.StationRequest;
 import wooteco.subway.station.dto.StationResponse;
-import wooteco.subway.station.exception.StationDuplicateException;
+import wooteco.subway.station.exception.DuplicateStationException;
+import wooteco.subway.station.exception.NotExistingStationException;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,7 +29,7 @@ public class StationService {
             Station newStation = stationDao.insert(station);
             return new StationResponse(newStation.getId(), newStation.getName());
         } catch (DuplicateKeyException e) {
-            throw new StationDuplicateException(stationRequest.getName());
+            throw new DuplicateStationException(stationRequest.getName());
         }
     }
 
@@ -40,6 +41,11 @@ public class StationService {
 
     private List<Station> findAllStations() {
         return stationDao.findAll();
+    }
+
+    public Station findStationById(Long id) {
+        return stationDao.findById(id)
+                .orElseThrow(() -> new NotExistingStationException(id));
     }
 
     @Transactional

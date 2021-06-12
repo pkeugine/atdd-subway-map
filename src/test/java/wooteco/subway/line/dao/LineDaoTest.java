@@ -7,35 +7,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import wooteco.subway.line.domain.Line;
 
-@JdbcTest
-@Sql("classpath:tableInit.sql")
 class LineDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final DataSource dataSource;
-
-    private LineDao lineDao;
-
-    @Autowired
-    public LineDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.dataSource = dataSource;
-    }
-
-    @BeforeEach
-    void setUp() {
-        this.lineDao = new LineDao(jdbcTemplate, dataSource);
-    }
+    private DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+            .addScript("classpath:tableInit.sql")
+            .build();
+    private LineDao lineDao = new LineDao(new JdbcTemplate(dataSource), dataSource);
 
     @DisplayName("노선 생성 - 성공")
     @Test
@@ -48,8 +33,9 @@ class LineDaoTest {
 
         // then
         assertThat(저장된_신분당선).extracting("id").isEqualTo(1L);
-        assertThat(저장된_신분당선).extracting("name").isEqualTo(신분당선.getName());
-        assertThat(저장된_신분당선).extracting("color").isEqualTo(신분당선.getColor());
+        assertThat(저장된_신분당선).usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(신분당선);
     }
 
     @DisplayName("노선 생성 - 실패, 중복된 노선 이름 존재")

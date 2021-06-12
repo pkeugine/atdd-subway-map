@@ -32,10 +32,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import wooteco.subway.line.application.LineService;
 import wooteco.subway.line.dto.LineRequest;
+import wooteco.subway.line.dto.LineWithStationsResponse;
 import wooteco.subway.line.dto.LineResponse;
-import wooteco.subway.line.dto.LineSimpleResponse;
 import wooteco.subway.line.dto.LineUpdateRequest;
-import wooteco.subway.line.exception.LineDuplicateException;
+import wooteco.subway.line.dto.SectionRequest;
+import wooteco.subway.line.exception.DuplicateLineException;
 import wooteco.subway.line.ui.LineController;
 import wooteco.subway.station.dto.StationResponse;
 
@@ -53,7 +54,7 @@ class LineDocumentationTest {
     private LineService lineService;
 
     LineRequest 신분당선_요청 = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
-    LineResponse 신분당선_응답 = new LineResponse(1L, "신분당선", "bg-red-600", Arrays.asList(
+    LineWithStationsResponse 신분당선_응답 = new LineWithStationsResponse(1L, "신분당선", "bg-red-600", Arrays.asList(
             new StationResponse(1L, "피케이역"),
             new StationResponse(2L, "코지역")
     ));
@@ -92,7 +93,8 @@ class LineDocumentationTest {
     void createLine_fail_duplicatedName() throws Exception {
         // given
         given(lineService.createLine(any(LineRequest.class)))
-                .willThrow(new LineDuplicateException("중복되는 이름이 있어서 노선을 추가할 수 없습니다. 노선 이름 : " + 신분당선_요청.getName()));
+                .willThrow(new DuplicateLineException(
+                        "중복되는 이름이 있어서 노선을 추가할 수 없습니다. 노선 이름 : " + 신분당선_요청.getName()));
 
         // when
         ResultActions result = this.mockMvc.perform(
@@ -114,7 +116,8 @@ class LineDocumentationTest {
     void createLine_fail_duplicatedColor() throws Exception {
         // given
         given(lineService.createLine(any(LineRequest.class)))
-                .willThrow(new LineDuplicateException("중복되는 색상이 있어서 노선을 추가할 수 없습니다. 노선 색상 : " + 신분당선_요청.getColor()));
+                .willThrow(new DuplicateLineException(
+                        "중복되는 색상이 있어서 노선을 추가할 수 없습니다. 노선 색상 : " + 신분당선_요청.getColor()));
 
         // when
         ResultActions result = this.mockMvc.perform(
@@ -136,8 +139,8 @@ class LineDocumentationTest {
     void showLines_success() throws Exception {
         // given
         given(lineService.findAllLineSimpleResponses()).willReturn(Arrays.asList(
-                new LineSimpleResponse(1L, "신분당선", "bg-red-600"),
-                new LineSimpleResponse(2L, "2호선", "bg-green-600")
+                new LineResponse(1L, "신분당선", "bg-red-600"),
+                new LineResponse(2L, "2호선", "bg-green-600")
         ));
 
         // when
@@ -187,7 +190,7 @@ class LineDocumentationTest {
         );
 
         // then
-        result.andExpect(status().isOk())
+        result.andExpect(status().isNoContent())
                 .andDo(document("line-put-success",
                         getDocumentRequest(),
                         getDocumentResponse()));
@@ -198,7 +201,7 @@ class LineDocumentationTest {
     void updateLine_fail_duplicateNameOrColor() throws Exception {
         // given
         LineUpdateRequest 신분당선_수정_요청 = new LineUpdateRequest("신분당선", "bg-red-600");
-        doThrow(new LineDuplicateException(신분당선_수정_요청.getName(), 신분당선_수정_요청.getColor()))
+        doThrow(new DuplicateLineException(신분당선_수정_요청.getName(), 신분당선_수정_요청.getColor()))
                 .when(lineService).updateLine(any(Long.class), any(LineUpdateRequest.class));
 
         // when
@@ -231,4 +234,23 @@ class LineDocumentationTest {
                         getDocumentResponse()));
     }
 
+    @DisplayName("노선 구간 추가 - 성공")
+    @Test
+    void addSectionInLine_success() throws Exception {
+        // given
+        SectionRequest sectionRequest = new SectionRequest(1L, 2L, 10);
+
+        // when
+        ResultActions result = this.mockMvc.perform(
+                post("/lines/1/sections")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(sectionRequest))
+        );
+
+        // then
+        result.andExpect(status().isNoContent())
+                .andDo(document("line-section-add-success",
+                        getDocumentRequest(),
+                        getDocumentResponse()));
+    }
 }

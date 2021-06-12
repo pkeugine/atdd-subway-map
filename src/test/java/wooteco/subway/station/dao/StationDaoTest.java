@@ -10,15 +10,17 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
 import wooteco.subway.station.domain.Station;
 
 @JdbcTest
 @Sql("classpath:tableInit.sql")
+@TestConstructor(autowireMode = AutowireMode.ALL)
 class StationDaoTest {
 
     private final JdbcTemplate jdbcTemplate;
@@ -26,7 +28,6 @@ class StationDaoTest {
 
     private StationDao stationDao;
 
-    @Autowired
     public StationDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.dataSource = dataSource;

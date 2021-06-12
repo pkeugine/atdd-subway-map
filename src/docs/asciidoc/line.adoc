@@ -47,3 +47,9 @@ include::{snippets}/line-put-fail-duplicate-name-or-color/http-response.adoc[]
 include::{snippets}/line-delete-success/http-request.adoc[]
 ==== 응답
 include::{snippets}/line-delete-success/http-response.adoc[]
+
+=== 구간 추가 성공
+==== 요청
+include::{snippets}/line-section-add-success/http-request.adoc[]
+==== 응답
+include::{snippets}/line-section-add-success/http-response.adoc[]

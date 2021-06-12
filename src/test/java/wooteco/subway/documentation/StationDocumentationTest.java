@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 import wooteco.subway.station.application.StationService;
 import wooteco.subway.station.dto.StationRequest;
 import wooteco.subway.station.dto.StationResponse;
-import wooteco.subway.station.exception.StationDuplicateException;
+import wooteco.subway.station.exception.DuplicateStationException;
 import wooteco.subway.station.ui.StationController;
 
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
@@ -100,7 +100,7 @@ class StationDocumentationTest {
         StationResponse 피케이역_응답 = new StationResponse(1L, "피케이역");
 
         given(stationService.createStation(any(StationRequest.class)))
-                .willThrow(new StationDuplicateException(피케이역_응답.getName()));
+                .willThrow(new DuplicateStationException(피케이역_응답.getName()));
 
         // when
         ResultActions result = this.mockMvc.perform(

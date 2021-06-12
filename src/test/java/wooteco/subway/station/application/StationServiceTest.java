@@ -19,7 +19,7 @@ import wooteco.subway.station.dao.StationDao;
 import wooteco.subway.station.domain.Station;
 import wooteco.subway.station.dto.StationRequest;
 import wooteco.subway.station.dto.StationResponse;
-import wooteco.subway.station.exception.StationDuplicateException;
+import wooteco.subway.station.exception.DuplicateStationException;
 
 @MockitoSettings
 class StationServiceTest {
@@ -56,7 +56,7 @@ class StationServiceTest {
 
         //when // then
         assertThatThrownBy(() -> stationService.createStation(피케이역_요청))
-                .isInstanceOf(StationDuplicateException.class);
+                .isInstanceOf(DuplicateStationException.class);
     }
 
     @DisplayName("지하철 역 전체 조회 - 성공")

@@ -18,8 +18,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import wooteco.subway.line.dao.LineDao;
 import wooteco.subway.line.domain.Line;
 import wooteco.subway.line.dto.LineRequest;
-import wooteco.subway.line.dto.LineSimpleResponse;
-import wooteco.subway.line.exception.LineDuplicateException;
+import wooteco.subway.line.dto.LineResponse;
+import wooteco.subway.line.exception.DuplicateLineException;
 
 @MockitoSettings
 class LineServiceTest {
@@ -51,11 +51,11 @@ class LineServiceTest {
         // given
         LineRequest 노선추가_요청 = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
         given(lineDao.existsName(any(String.class)))
-                .willThrow(LineDuplicateException.class);
+                .willThrow(DuplicateLineException.class);
 
         // when // then
         assertThatThrownBy(() -> lineService.createLine(노선추가_요청))
-                .isInstanceOf(LineDuplicateException.class);
+                .isInstanceOf(DuplicateLineException.class);
         then(lineDao).should(never()).insert(any(Line.class));
     }
 
@@ -65,11 +65,11 @@ class LineServiceTest {
         // given
         LineRequest 노선추가_요청 = new LineRequest("신분당선", "bg-red-600", 1L, 2L, 10);
         given(lineDao.existsColor(any(String.class)))
-                .willThrow(LineDuplicateException.class);
+                .willThrow(DuplicateLineException.class);
 
         // when // then
         assertThatThrownBy(() -> lineService.createLine(노선추가_요청))
-                .isInstanceOf(LineDuplicateException.class);
+                .isInstanceOf(DuplicateLineException.class);
         then(lineDao).should(never()).insert(any(Line.class));
     }
 
@@ -84,10 +84,10 @@ class LineServiceTest {
         given(lineDao.findAll()).willReturn(lines);
 
         // when
-        List<LineSimpleResponse> lineSimpleResponses = lineService.findAllLineSimpleResponses();
+        List<LineResponse> lineRespons = lineService.findAllLineSimpleResponses();
 
         // then
-        assertThat(lineSimpleResponses).usingRecursiveComparison()
+        assertThat(lineRespons).usingRecursiveComparison()
                 .isEqualTo(lines);
         then(lineDao).should(times(1)).findAll();
     }
