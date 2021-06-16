@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import wooteco.subway.line.application.InvalidSectionException;
+import wooteco.subway.line.exception.InvalidSectionException;
 
 class SectionTest {
 

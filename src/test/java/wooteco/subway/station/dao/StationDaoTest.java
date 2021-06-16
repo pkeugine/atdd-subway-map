@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,19 +24,10 @@ import wooteco.subway.station.domain.Station;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 class StationDaoTest {
 
-    private final JdbcTemplate jdbcTemplate;
-    private final DataSource dataSource;
-
-    private StationDao stationDao;
+    private final StationDao stationDao;
 
     public StationDaoTest(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.dataSource = dataSource;
-    }
-
-    @BeforeEach
-    void setUp() {
-        this.stationDao = new StationDao(jdbcTemplate, dataSource);
+        stationDao = new StationDao(jdbcTemplate, dataSource);
     }
 
     @DisplayName("지하철 역 저장 - 성공")

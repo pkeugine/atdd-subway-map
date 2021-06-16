@@ -17,10 +17,10 @@ import wooteco.subway.line.domain.Line;
 
 class LineDaoTest {
 
-    private DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+    private final DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
             .addScript("classpath:tableInit.sql")
             .build();
-    private LineDao lineDao = new LineDao(new JdbcTemplate(dataSource), dataSource);
+    private final LineDao lineDao = new LineDao(new JdbcTemplate(dataSource), dataSource);
 
     @DisplayName("노선 생성 - 성공")
     @Test

@@ -1,6 +1,6 @@
 package wooteco.subway.line.domain;
 
-import wooteco.subway.line.application.InvalidSectionException;
+import wooteco.subway.line.exception.InvalidSectionException;
 
 public class Section {
 
